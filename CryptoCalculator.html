@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: #23036a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 290px;
+            text-align: center;
+            margin-bottom: 0px;
+        }
+
+        h1 {
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-size: 30px;
+            text-align: center;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+            background: #23036a;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        input, select, button {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #000;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 100px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        dialog {
+            padding: 20px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #222831;
+            color: #fff;
+            width: 50%;
+            max-width: 200px;
+            margin: auto;
+            text-align: center;
+        }
+
+        dialog p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        dialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        dialog button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            margin-top: 20px;
+        }
+
+        .info-container {
+            background-color: #3a3f47;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .info-container p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container, .info-container, dialog {
+                width: 100%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            dialog p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div><h2>Welcome 🤗🤗</h2></div>
+
+    <div class="container">
+        <h1>CRYPTO CALCULATOR</h1>
+        <form id="crypto-form">
+            <div class="form-group">
+                <label for="amount">Amount of Money:</label>
+                <input type="number" id="amount" name="amount" step="0.000000001" required>
+            </div>
+            <div class="form-group">
+                <label for="currency">Currency:</label>
+                <select id="currency" name="currency" required>
+                    <option value="USD">USD</option>
+                    <option value="NGN">NGN</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                    <option value="KWD">KWD</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="crypto">Cryptocurrency:</label>
+                <input type="text" id="crypto" name="crypto" placeholder="Type cryptocurrency name" required>
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="result"></div>
+        <!--<a href="home.html" class="back-button">-->
+        <!--    <button>Back</button>-->
+        <!--</a>-->
+    </div>
+
+    <!-- Result Dialog -->
+    <dialog id="resultDialog">
+        <p id="dialogMessage"></p>
+        <button id="closeDialog">Close</button>
+    </dialog>
+    
+    <script>
+        document.getElementById('crypto-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+          
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            const crypto = document.getElementById('crypto').value.toLowerCase().replace(' ', '-');
+
+            fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=${currency.toLowerCase()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data[crypto]) {
+                        const rate = data[crypto][currency.toLowerCase()];
+                        const cryptoAmount = amount / rate;
+                        showDialog(`You can get ${cryptoAmount.toFixed(12)} ${crypto.replace('-', ' ')}`);
+                    } else {
+                        showDialog('Invalid cryptocurrency name. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching the crypto price:', error);
+                    showDialog('Error fetching the crypto price. Please try again later.');
+                });
+        });
+
+        function showDialog(message) {
+            const dialog = document.getElementById('resultDialog');
+            document.getElementById('dialogMessage').innerText = message;
+            dialog.showModal();
+        }
+
+        document.getElementById('closeDialog').addEventListener('click', function () {
+            document.getElementById('resultDialog').close();
+        });
+    </script>
+</body>
+</html>
