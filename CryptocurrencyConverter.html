@@ -24,7 +24,6 @@
             width: 90%;
             align-items: center;
             justify-content: center;
-            
         }
         .catchy-phrase {
             text-align: center;
@@ -114,7 +113,7 @@
             text-align: center;
             margin-top: 20px;
             color: #ffffff;
-             align-items: center;
+            align-items: center;
             justify-content: center;
         }
         .button-group {
@@ -181,7 +180,7 @@
         
         <form id="cryptoForm">
             <input type="text" id="cryptoName" name="cryptoName" placeholder="Enter cryptocurrency" required>
-            <input type="number" id="cryptoAmount" name="cryptoAmount" placeholder="Enter amount" required>
+            <input type="number" id="cryptoAmount" name="cryptoAmount" placeholder="Enter amount" required step="0.0001" min="0">
             <select id="currency" name="currency" required>
                 <option value="usd">USD</option>
                 <option value="eur">EUR</option>
@@ -260,68 +259,46 @@
                     if (data[cryptoName]) {
                         const rate = data[cryptoName][selectedCurrency];
                         const result = cryptoAmount * rate;
-                        const currentPrice = `1 ${cryptoName.toUpperCase()} = ${rate.toFixed(2)} ${selectedCurrency.toUpperCase()}`;
-                        const conversionResult = `${cryptoAmount} ${cryptoName.toUpperCase()} = ${result.toFixed(2)} ${selectedCurrency.toUpperCase()}`;
-                        document.getElementById('result').innerHTML = `<strong>${translations[currentLanguage].exchangeRateLabel}:</strong><br>${currentPrice}<br><br><strong>${translations[currentLanguage].resultLabel}:</strong><br>${conversionResult}`;
-                        openModal('resultDialog');
+                        const resultElement = document.getElementById('result');
+                        resultElement.textContent = `The value of ${cryptoAmount} ${cryptoName.toUpperCase()} in ${selectedCurrency.toUpperCase()} is: ${result.toFixed(4)}`;
+                        document.getElementById('resultDialog').style.display = 'block';
                     } else {
-                        document.getElementById('result').textContent = translations[currentLanguage].invalidCrypto;
-                        openModal('resultDialog');
+                        alert(translations[currentLanguage].invalidCrypto);
                     }
                 })
-                .catch(error => {
-                    document.getElementById('result').textContent = translations[currentLanguage].error;
-                    console.error('Error:', error);
-                    openModal('resultDialog');
-                });
+                .catch(() => alert(translations[currentLanguage].error));
         });
-
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'block';
-        }
 
         document.getElementById('closeButton').addEventListener('click', function() {
-            const modal = document.getElementById('resultDialog');
-            modal.style.display = 'none';
+            document.getElementById('resultDialog').style.display = 'none';
         });
 
-        window.addEventListener('click', function(event) {
-            const resultModal = document.getElementById('resultDialog');
-            const languageModal = document.getElementById('languageDialog');
-            if (event.target === resultModal) {
-                resultModal.style.display = 'none';
-            } else if (event.target === languageModal) {
-                languageModal.style.display = 'none';
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageDialog = document.getElementById('languageDialog');
+            languageDialog.style.display = 'block';
+            document.getElementById('englishButton').addEventListener('click', function() {
+                setLanguage('en');
+                languageDialog.style.display = 'none';
+            });
+            document.getElementById('hausaButton').addEventListener('click', function() {
+                setLanguage('ha');
+                languageDialog.style.display = 'none';
+            });
         });
 
         let currentLanguage = 'en';
 
-        document.getElementById('englishButton').addEventListener('click', function() {
-            setLanguage('en');
-        });
-
-        document.getElementById('hausaButton').addEventListener('click', function() {
-            setLanguage('ha');
-        });
-
-        function setLanguage(language) {
-            currentLanguage = language;
-            document.getElementById('title').textContent = translations[language].title;
-            document.getElementById('cryptoName').placeholder = translations[language].placeholderCrypto;
-            document.getElementById('cryptoAmount').placeholder = translations[language].placeholderAmount;
-            document.querySelector('button[type="submit"]').textContent = translations[language].convertButton;
-            document.getElementById('instruction1').textContent = translations[language].instruction1;
-            document.getElementById('instruction2').textContent = translations[language].instruction2;
-            document.getElementById('instruction3').textContent = translations[language].instruction3;
-            document.getElementById('instruction4').textContent = translations[language].instruction4;
-            document.getElementById('languageDialog').style.display = 'none';
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('title').textContent = translations[lang].title;
+            document.getElementById('cryptoName').placeholder = translations[lang].placeholderCrypto;
+            document.getElementById('cryptoAmount').placeholder = translations[lang].placeholderAmount;
+            document.getElementById('cryptoForm').querySelector('button[type="submit"]').textContent = translations[lang].convertButton;
+            document.getElementById('instruction1').textContent = translations[lang].instruction1;
+            document.getElementById('instruction2').textContent = translations[lang].instruction2;
+            document.getElementById('instruction3').textContent = translations[lang].instruction3;
+            document.getElementById('instruction4').textContent = translations[lang].instruction4;
         }
-
-        window.onload = function() {
-            openModal('languageDialog');
-        };
     </script>
 </body>
 </html>
