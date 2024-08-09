@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Crypto Price</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 290px;
+            margin: 3px auto;
+            padding: 20px;
+            background-color: green;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        h2, h3, h4, h5 {
+            text-align: center;
+            color: black;
+        }
+
+        input, select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: calc(50% - 10px);
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .get-price {
+            background-color: #007bff;
+        }
+
+        .get-price:hover {
+            background-color: #0056b3;
+        }
+
+        .crypto-calculator {
+            background-color: #28a745;
+        }
+
+        .crypto-calculator:hover {
+            background-color: #218838;
+        }
+
+        .clear {
+            background-color: #dc3545;
+            width: 100%;
+        }
+
+        .clear:hover {
+            background-color: #c82333;
+        }
+
+        .crypto-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .crypto-button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .description {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .description p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .social-icons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            font-size: 24px;
+            color: blue;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #007bff;
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            margin: 0 10px;
+            font-size: 16px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        dialog {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .dialog-close-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .dialog-close-button:hover {
+            background-color: #0056b3;
+        }
+
+        .language-dialog {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .language-button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .language-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <dialog id="languageDialog">
+        <div class="language-dialog">
+            <h2>Select Language</h2>
+            <button class="language-button" onclick="setLanguage('en')">English</button>
+            <button class="language-button" onclick="setLanguage('ha')">Hausa</button>
+            <button class="language-button" onclick="setLanguage('es')">Español</button>
+            <button class="language-button" onclick="setLanguage('ar')">العربية</button>
+        </div>
+    </dialog>
+
+    <div><h1 id="welcomeTitle">Welcome to Best Crypto Price Checker</h1></div>
+    <div class="social-icons">
+        <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://www.whatsapp.com" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <style>
+        /* Custom styles */
+        .scrolling-text {
+            font-family: 'Arial', sans-serif;
+            font-size: 3vw; /* Adjust text size using vw */
+            font-weight: bold;
+            color: blue;
+            padding: 3vw; /* Adjust padding using vw */
+        }
+    </style>
+    <marquee class="scrolling-text" width="100%" direction="left" height="px" id="welcomeMarquee">
+        Welcome to Our App, Track Your Crypto Wealth Instantly Your Personal Crypto Tracker: Always Up-to-Date.
+    </marquee>
+
+    <div class="container">
+        <h2 id="checkCryptoPriceTitle">Check Crypto Price</h2>
+        <input type="text" id="searchInput" placeholder="Enter coin id (e.g., btc, sol, trx)">
+        <select id="exchangeSelect">
+            <option value="binance">Binance</option>
+            <option value="coinbase">Coinbase</option>
+            <option value="bybit">Bybit</option>
+        </select>
+        <div style="display: flex; justify-content: space-between;">
+            <button class="crypto-button" onclick="fetchPrice()">Get Price</button>
+        </div>
+        <button class="clear" onclick="clearResult()">Clear</button>
+        <div id="result"></div>
+    </div>
+
+    <button class="crypto-button" onclick="fetchPrice()">Get Price</button>
+
+    <div class="description">
+        <h2 id="aboutTitle">About the Crypto Price Checker</h2>
+        <h3 id="whatIsThisAppTitle">What is this app?</h3>
+        <p id="aboutAppDescription">This app allows you to quickly check the current prices of various cryptocurrencies across different exchanges.</p>
+        <h2 id="howToUseTitle">How to Use</h2>
+        <h3 id="stepByStepInstructionsTitle">Step-by-Step Instructions:</h3>
+        <p id="instructions">
+            1. Enter the coin ID of the cryptocurrency you want to check (e.g., btc for Bitcoin, sol for Solana, trx for TRON).<br>
+            2. Select the exchange you want to get the price from (Binance, Coinbase, or Bybit).<br>
+            3. Click on the "Get Price" button to fetch the current prices.<br>
+            4. To refresh the prices, click on the "Crypto Calculator" button.<br>
+            5. To clear the results and input fields, click on the "Clear" button.
+        </p>
+    </div>
+
+    <div class="footer-links">
+        <a href="/blog" target="_blank" id="blogLink">Blog</a>
+        <a href="/policy" target="_blank" id="policyLink">Policy</a>
+        <a href="/team-of-use" target="_blank" id="termsLink">Team of Use</a>
+    </div>
+
+    <dialog id="priceDialog">
+        <div id="dialogContent"></div>
+        <button class="dialog-close-button" onclick="closeDialog()">Close</button>
+    </dialog>
+
+    <script>
+        let lastCoinId = '';
+        let lastExchange = '';
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const languageDialog = document.getElementById('languageDialog');
+            languageDialog.showModal();
+        });
+
+        function setLanguage(language) {
+            if (language === 'ha') {
+                document.getElementById('welcomeTitle').innerText = 'Barka da zuwa Mafi Kyawun Mai Duba Farashin Crypto';
+                document.getElementById('welcomeMarquee').innerText = 'Barka da zuwa Aikace-aikacen mu, Bi Dukiyar Crypto ɗinku Cikin Sauƙi Mai Binciken Kudin Crypto ɗinku: Koyaushe An Sabunta.';
+                document.getElementById('checkCryptoPriceTitle').innerText = 'Duba Farashin Crypto';
+                document.getElementById('aboutTitle').innerText = 'Game da Mai Duba Farashin Crypto';
+                document.getElementById('whatIsThisAppTitle').innerText = 'Menene wannan aikace-aikacen?';
+                document.getElementById('aboutAppDescription').innerText = 'Wannan aikace-aikacen yana ba ku damar duba farashin cryptocurrencies daban-daban cikin sauri a fadin musayar daban-daban.';
+                document.getElementById('howToUseTitle').innerText = 'Yadda Ake Amfani';
+                document.getElementById('stepByStepInstructionsTitle').innerText = 'Umarnin Mataki-by-Mataki:';
+                document.getElementById('instructions').innerHTML = '1. Shigar da ID na kudin crypto da kuke son dubawa (misali, btc don Bitcoin, sol don Solana, trx don TRON).<br>2. Zaɓi musayar da kuke son samun farashin daga (Binance, Coinbase, ko Bybit).<br>3. Danna maballin "Get Price" don ɗaukar farashin yanzu.<br>4. Don sabunta farashin, danna maballin "Crypto Calculator".<br>5. Don share sakamakon da filayen shigar, danna maballin "Clear".';
+                document.getElementById('blogLink').innerText = 'Blog';
+                document.getElementById('policyLink').innerText = 'Manufofi';
+                document.getElementById('termsLink').innerText = 'Sharuɗɗa';
+            } else if (language === 'es') {
+                document.getElementById('welcomeTitle').innerText = 'Bienvenido al Mejor Comprobador de Precios de Cripto';
+                document.getElementById('welcomeMarquee').innerText = 'Bienvenido a Nuestra Aplicación, Rastrea Tu Riqueza Cripto al Instante Tu Rastreador Personal de Cripto: Siempre Actualizado.';
+                document.getElementById('checkCryptoPriceTitle').innerText = 'Verificar Precio de Cripto';
+                document.getElementById('aboutTitle').innerText = 'Acerca del Comprobador de Precios de Cripto';
+                document.getElementById('whatIsThisAppTitle').innerText = '¿Qué es esta aplicación?';
+                document.getElementById('aboutAppDescription').innerText = 'Esta aplicación te permite verificar rápidamente los precios actuales de varias criptomonedas en diferentes intercambios.';
+                document.getElementById('howToUseTitle').innerText = 'Cómo Usar';
+                document.getElementById('stepByStepInstructionsTitle').innerText = 'Instrucciones Paso a Paso:';
+                document.getElementById('instructions').innerHTML = '1. Introduce el ID de la moneda de la criptomoneda que quieres verificar (por ejemplo, btc para Bitcoin, sol para Solana, trx para TRON).<br>2. Selecciona el intercambio del que quieres obtener el precio (Binance, Coinbase o Bybit).<br>3. Haz clic en el botón "Get Price" para obtener los precios actuales.<br>4. Para actualizar los precios, haz clic en el botón "Crypto Calculator".<br>5. Para borrar los resultados y los campos de entrada, haz clic en el botón "Clear".';
+                document.getElementById('blogLink').innerText = 'Blog';
+                document.getElementById('policyLink').innerText = 'Política';
+                document.getElementById('termsLink').innerText = 'Términos de Uso';
+            } else if (language === 'ar') {
+                document.getElementById('welcomeTitle').innerText = 'مرحبًا بك في أفضل متحقق من أسعار العملات المشفرة';
+                document.getElementById('welcomeMarquee').innerText = 'مرحبًا بك في تطبيقنا، تتبع ثروتك المشفرة فورًا متتبعك الشخصي للعملات المشفرة: دائمًا محدث.';
+                document.getElementById('checkCryptoPriceTitle').innerText = 'تحقق من سعر العملات المشفرة';
+                document.getElementById('aboutTitle').innerText = 'حول متحقق أسعار العملات المشفرة';
+                document.getElementById('whatIsThisAppTitle').innerText = 'ما هو هذا التطبيق؟';
+                document.getElementById('aboutAppDescription').innerText = 'يتيح لك هذا التطبيق التحقق بسرعة من الأسعار الحالية للعديد من العملات المشفرة عبر مختلف البورصات.';
+                document.getElementById('howToUseTitle').innerText = 'كيفية الاستخدام';
+                document.getElementById('stepByStepInstructionsTitle').innerText = 'تعليمات خطوة بخطوة:';
+                document.getElementById('instructions').innerHTML = '1. أدخل معرف العملة للعملة المشفرة التي تريد التحقق منها (على سبيل المثال، btc للبيتكوين، sol لسولانا، trx للترون).<br>2. اختر البورصة التي تريد الحصول على السعر منها (Binance، Coinbase، أو Bybit).<br>3. انقر فوق الزر "Get Price" للحصول على الأسعار الحالية.<br>4. لتحديث الأسعار، انقر فوق الزر "Crypto Calculator".<br>5. لمسح النتائج وحقول الإدخال، انقر فوق الزر "Clear".';
+                document.getElementById('blogLink').innerText = 'مدونة';
+                document.getElementById('policyLink').innerText = 'السياسة';
+                document.getElementById('termsLink').innerText = 'شروط الاستخدام';
+            }
+            const languageDialog = document.getElementById('languageDialog');
+            languageDialog.close();
+        }
+
+        async function fetchPrice() {
+            const coinId = document.getElementById('searchInput').value.toLowerCase();
+            const exchange = document.getElementById('exchangeSelect').value;
+            const resultDiv = document.getElementById('result');
+
+            if (coinId === "") {
+                showDialog("Please enter the Name of the Coin.");
+                return;
+            }
+
+            lastCoinId = coinId;
+            lastExchange = exchange;
+
+            const currencies = ['usd', 'ngn', 'eur', 'gbp', 'kwd'];
+            const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currencies.join(',')}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                if (data[coinId]) {
+                    const prices = currencies.map(currency => `${currency.toUpperCase()}: ${data[coinId][currency]}`).join('<br>');
+                    showDialog(`Current prices for ${coinId.toUpperCase()} on ${exchange}:<br>${prices}`);
+                } else {
+                    showDialog(`Coin not found. Please check the coin id and try again.`);
+                }
+            } catch (error) {
+                showDialog(`Error: ${error.message}`);
+            }
+        }
+
+        function showDialog(message) {
+            const dialog = document.getElementById('priceDialog');
+            const dialogContent = document.getElementById('dialogContent');
+            dialogContent.innerHTML = message;
+            dialog.showModal();
+        }
+
+        function closeDialog() {
+            const dialog = document.getElementById('priceDialog');
+            dialog.close();
+        }
+
+        function clearResult() {
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('exchangeSelect').selectedIndex = 0;
+            lastCoinId = '';
+            lastExchange = '';
+        }
+    </script>
+</body>
+</html>
