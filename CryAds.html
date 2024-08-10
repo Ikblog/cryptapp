@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Scrolling Image Cards</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: write;
+            overflow: hidden;
+        }
+
+        .scrolling-container {
+            width: 200%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .image-container {
+            display: inline-block;
+            animation: scroll-left 15s linear infinite;
+        }
+
+        .image-card {
+            display: inline-block;
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 10px;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .image-card {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+
+            .image-card img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scrolling-container">
+        <div class="image-container">
+            <div class="image-card">
+                <a href="https://www.google.com" target="_blank">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1BsBDxfVu55QcgWXVy0lG7FQFnAZ5sQ61spvfhycuG9lyP1yajQwIfcsnMoWW-VaZwGwP_S1PsxRqoB8R_8c2STfyaNav0JFDN-LSblZQnfDEyXN4uPWTZHlhyphenhyphenY7bJhGhyphenhyphenlF8wT59dMUF4A7eBPmhzUEs5MAUbGr2p_mb0jnulD6y-pjVa21X_wgHTKav/s300/polotno%20(6).png" alt="Clickable Image 1">
+                </a>
+            </div>
+            <div class="image-card">
+                <a href="https://www.google.com" target="_blank">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwmXLw4-_nCqGo2lAzdQhyphenhyphenPhztQPHmw0BYmREx2haLh6FscwBkFUF2Zr1XNJtgxh23WH_sF26VFVLXhiNd5CfgpYdCl3_UlcdFeUgo3YfojgUNPOX79sBbpZGJZM_fyf4hHACR9Dpgb5zFEOfUwbgFlAa-0MxYBtklyZ4sSJSUOI2uckMWf7jq01gx4UJe/s300/polotno%20(7).png" alt="Clickable Image 2">
+                </a>
+            </div>
+            <div class="image-card">
+                <a href="https://www.google.com" target="_blank">
+                    <img src="https://via.placeholder.com/300x200" alt="Clickable Image 3">
+                </a>
+            </div>
+            <div class="image-card">
+                <a href="https://www.google.com" target="_blank">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwmXLw4-_nCqGo2lAzdQhyphenhyphenPhztQPHmw0BYmREx2haLh6FscwBkFUF2Zr1XNJtgxh23WH_sF26VFVLXhiNd5CfgpYdCl3_UlcdFeUgo3YfojgUNPOX79sBbpZGJZM_fyf4hHACR9Dpgb5zFEOfUwbgFlAa-0MxYBtklyZ4sSJSUOI2uckMWf7jq01gx4UJe/s300/polotno%20(7).png" alt="Clickable Image 4">
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
